@@ -1,0 +1,110 @@
+{
+	"name": "PL_DATA_Ingesta_AdventureWorks",
+	"properties": {
+		"activities": [
+			{
+				"name": "Carga RRHH-Mst",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DATA_SQL_to_ADLS",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Grupo": "RRHH-Mst"
+					}
+				}
+			},
+			{
+				"name": "Carga Venta-Mst",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Carga RRHH-Mst",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DATA_SQL_to_ADLS",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Grupo": "Venta-Mst"
+					}
+				}
+			},
+			{
+				"name": "Cargar Venta-Trn",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Cargar RRHH-Trn",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DATA_SQL_to_ADLS",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Grupo": "Venta-Trn"
+					}
+				}
+			},
+			{
+				"name": "Cargar RRHH-Trn",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Carga Venta-Mst",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DATA_SQL_to_ADLS",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Grupo": "RRHH-Trn"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "Modulo 5"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-07-20T16:48:40Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

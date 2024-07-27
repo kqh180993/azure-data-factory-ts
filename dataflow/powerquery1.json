@@ -1,0 +1,28 @@
+{
+	"name": "powerquery1",
+	"properties": {
+		"type": "WranglingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"name": "DS_ADLS_XLSX_Departamento",
+					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> DS_ADLS_XLSX_Departamento",
+					"dataset": {
+						"referenceName": "DS_ADLS_XLSX_Departamento",
+						"type": "DatasetReference"
+					}
+				},
+				{
+					"name": "DS_ADLS_XLSX_Zona",
+					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> DS_ADLS_XLSX_Zona",
+					"dataset": {
+						"referenceName": "DS_ADLS_XLSX_Zona",
+						"type": "DatasetReference"
+					}
+				}
+			],
+			"script": "section Section1;\r\nshared DS_ADLS_XLSX_Departamento = let AdfDoc = AzureStorage.DataLakeContents(\"https://adslteamsoftdf.dfs.core.windows.net/1-bronce/Maestros.xlsx\"), Excel = Excel.Workbook(AdfDoc),ExcelSheet = Excel{[Item=\"Departamento\",Kind=\"Sheet\"]}[Data], PromotedHeaders = Table.PromoteHeaders(ExcelSheet, [PromoteAllScalars = true]) in PromotedHeaders;\r\nshared DS_ADLS_XLSX_Zona = let AdfDoc = AzureStorage.DataLakeContents(\"https://adslteamsoftdf.dfs.core.windows.net/1-bronce/Maestros.xlsx\"), Excel = Excel.Workbook(AdfDoc),ExcelSheet = Excel{[Item=\"Zona\",Kind=\"Sheet\"]}[Data], PromotedHeaders = Table.PromoteHeaders(ExcelSheet, [PromoteAllScalars = true]) in PromotedHeaders;\r\nshared UserQuery = let Source = #\"DS_ADLS_XLSX_Departamento\",\r\n  #\"Removed columns\" = Table.RemoveColumns(Source, {\"DepartamentoPais\", \"Departamento\"}),\r\n  #\"Merged queries\" = Table.NestedJoin(#\"Removed columns\", {\"ZonaID\"}, DS_ADLS_XLSX_Zona, {\"ZonaID\"}, \"DS_ADLS_XLSX_Zona\", JoinKind.LeftOuter),\r\n  #\"Expanded DS_ADLS_XLSX_Zona\" = Table.ExpandTableColumn(#\"Merged queries\", \"DS_ADLS_XLSX_Zona\", {\"Zona\"}, {\"Zona\"}),\r\n  #\"Removed columns 1\" = Table.RemoveColumns(#\"Expanded DS_ADLS_XLSX_Zona\", {\"ZonaID\"}) in #\"Removed columns 1\";\r\n",
+			"documentLocale": "en-us"
+		}
+	}
+}

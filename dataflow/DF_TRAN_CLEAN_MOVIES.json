@@ -1,0 +1,95 @@
+{
+	"name": "DF_TRAN_CLEAN_MOVIES",
+	"properties": {
+		"folder": {
+			"name": "Transformaciones Plata"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_ADLS_Parquet_Movies",
+						"type": "DatasetReference"
+					},
+					"name": "SourceADLSMovies"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_ADLS_CSV_Movies",
+						"type": "DatasetReference"
+					},
+					"name": "SinkUpsertIfTrue"
+				}
+			],
+			"transformations": [
+				{
+					"name": "SelectMovies"
+				},
+				{
+					"name": "FilterMovies"
+				},
+				{
+					"name": "DerivedColumnGener"
+				},
+				{
+					"name": "WindowRankingRating"
+				},
+				{
+					"name": "CastConvertRanking"
+				},
+				{
+					"name": "AggregateRankings"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          movie as string,",
+				"          title as string,",
+				"          genres as string,",
+				"          year as string,",
+				"          Rating as string,",
+				"          RottenTomato as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> SourceADLSMovies",
+				"SourceADLSMovies select(mapColumn(",
+				"          {Película} = movie,",
+				"          {Título} = title,",
+				"          {Géneros} = genres,",
+				"          {Año} = year,",
+				"          RottenTomatoes = RottenTomato",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SelectMovies",
+				"SelectMovies filter(toInteger({Año})>1950) ~> FilterMovies",
+				"FilterMovies derive({Género Primario} = iif(locate('|', {Géneros})>1, left({Géneros}, locate('|', {Géneros})-1), {Géneros})) ~> DerivedColumnGener",
+				"CastConvertRanking window(over({Género Primario},",
+				"          {Año}),",
+				"     desc(RottenTomatoes, true),",
+				"     RankingRatings = rank()) ~> WindowRankingRating",
+				"DerivedColumnGener cast(output(",
+				"          RottenTomatoes as integer",
+				"     ),",
+				"     errors: true) ~> CastConvertRanking",
+				"WindowRankingRating aggregate(groupBy({Género Primario},",
+				"          {Año}),",
+				"     {Rating Promedio} = avg(RottenTomatoes),",
+				"          {Mejor Rating} = first({Título}),",
+				"          {Peor Rating} = last({Título}),",
+				"          {Nro Películas} = count()) ~> AggregateRankings",
+				"AggregateRankings sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SinkUpsertIfTrue"
+			]
+		}
+	}
+}

@@ -1,0 +1,21 @@
+{
+	"name": "DS_ADLS_Parquet_Departamento",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS_Parquet",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "DepartamentoKQH.parquet",
+				"fileSystem": "2-plata"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

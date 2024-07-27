@@ -1,0 +1,24 @@
+{
+	"name": "DS_ADLS_Parquet_Movies",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS_Parquet",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "1-Bronce"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "moviesKQH.parquet",
+				"fileSystem": "1-bronce"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,50 @@
+{
+	"name": "DS_ASQL_Integracion_TablaIngesta",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ASQL_Integracion",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Modulo 5"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "IdTabla",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Grupo",
+				"type": "varchar"
+			},
+			{
+				"name": "NombreEsquema",
+				"type": "varchar"
+			},
+			{
+				"name": "NombreTabla",
+				"type": "varchar"
+			},
+			{
+				"name": "Estado",
+				"type": "bit"
+			},
+			{
+				"name": "UsuarioCreacion",
+				"type": "varchar"
+			},
+			{
+				"name": "FechaCreacion",
+				"type": "date"
+			}
+		],
+		"typeProperties": {
+			"schema": "intg",
+			"table": "TablasIngesta"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

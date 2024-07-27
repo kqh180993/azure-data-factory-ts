@@ -1,0 +1,128 @@
+{
+	"name": "PL_DATA_SQL_to_ADLS",
+	"properties": {
+		"activities": [
+			{
+				"name": "LK_ObtenerTablasIngesta",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('SELECT NombreEsquema, NombreTabla FROM intg.TablasIngesta WHERE Grupo = ''', pipeline().parameters.Grupo, ''' AND Estado = 1')",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_ASQL_Integracion_TablaIngesta",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "FE_CopiarTablasIngesta",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "LK_ObtenerTablasIngesta",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('LK_ObtenerTablasIngesta').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "CD_DATA_SQL_to_ADLS",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('SELECT * FROM ', item().NombreEsquema, '.', item().NombreTabla)",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "DS_ASQL_AdventureWorks",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_ADLS_Parquet",
+									"type": "DatasetReference",
+									"parameters": {
+										"Ruta": {
+											"value": "@concat(item().NombreEsquema, '\\', item().NombreTabla)",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"Grupo": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Modulo 5"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-07-20T16:48:40Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
