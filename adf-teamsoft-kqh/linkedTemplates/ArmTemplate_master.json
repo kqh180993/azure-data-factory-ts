@@ -1,0 +1,153 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adf-teamsoft-kqh"
+		},
+		"LS_ADLS_Parquet_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'LS_ADLS_Parquet'"
+		},
+		"LS_ASQL_AdventureWorks_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'LS_ASQL_AdventureWorks'"
+		},
+		"LS_ASQL_Integracion_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'LS_ASQL_Integracion'"
+		},
+		"LS_ASQL_Tailspin_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_ASQL_Tailspin'"
+		},
+		"LS_S3_CSV_secretAccessKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'secretAccessKey' of 'LS_S3_CSV'"
+		},
+		"LS_ADLS_Parquet_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adslteamsoftdf.dfs.core.windows.net/"
+		},
+		"LS_ASQL_AdventureWorks_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "dbl-servicesrv.database.windows.net"
+		},
+		"LS_ASQL_AdventureWorks_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "AdventureWorks"
+		},
+		"LS_ASQL_AdventureWorks_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "usr_asql_integracion"
+		},
+		"LS_ASQL_Integracion_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "dbl-servicesrv.database.windows.net"
+		},
+		"LS_ASQL_Integracion_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "Integracion"
+		},
+		"LS_ASQL_Integracion_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "usr_asql_integracion"
+		},
+		"LS_S3_CSV_properties_typeProperties_accessKeyId": {
+			"type": "string",
+			"defaultValue": "AKIAWHQSER2DT3HU3OO6"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "adf-teamsoft-kqh_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"LS_ADLS_Parquet_accountKey": {
+						"value": "[parameters('LS_ADLS_Parquet_accountKey')]"
+					},
+					"LS_ASQL_AdventureWorks_password": {
+						"value": "[parameters('LS_ASQL_AdventureWorks_password')]"
+					},
+					"LS_ASQL_Integracion_password": {
+						"value": "[parameters('LS_ASQL_Integracion_password')]"
+					},
+					"LS_ASQL_Tailspin_connectionString": {
+						"value": "[parameters('LS_ASQL_Tailspin_connectionString')]"
+					},
+					"LS_S3_CSV_secretAccessKey": {
+						"value": "[parameters('LS_S3_CSV_secretAccessKey')]"
+					},
+					"LS_ADLS_Parquet_properties_typeProperties_url": {
+						"value": "[parameters('LS_ADLS_Parquet_properties_typeProperties_url')]"
+					},
+					"LS_ASQL_AdventureWorks_properties_typeProperties_server": {
+						"value": "[parameters('LS_ASQL_AdventureWorks_properties_typeProperties_server')]"
+					},
+					"LS_ASQL_AdventureWorks_properties_typeProperties_database": {
+						"value": "[parameters('LS_ASQL_AdventureWorks_properties_typeProperties_database')]"
+					},
+					"LS_ASQL_AdventureWorks_properties_typeProperties_userName": {
+						"value": "[parameters('LS_ASQL_AdventureWorks_properties_typeProperties_userName')]"
+					},
+					"LS_ASQL_Integracion_properties_typeProperties_server": {
+						"value": "[parameters('LS_ASQL_Integracion_properties_typeProperties_server')]"
+					},
+					"LS_ASQL_Integracion_properties_typeProperties_database": {
+						"value": "[parameters('LS_ASQL_Integracion_properties_typeProperties_database')]"
+					},
+					"LS_ASQL_Integracion_properties_typeProperties_userName": {
+						"value": "[parameters('LS_ASQL_Integracion_properties_typeProperties_userName')]"
+					},
+					"LS_S3_CSV_properties_typeProperties_accessKeyId": {
+						"value": "[parameters('LS_S3_CSV_properties_typeProperties_accessKeyId')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "adf-teamsoft-kqh_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adf-teamsoft-kqh_ArmTemplate_0')]"
+			]
+		}
+	]
+}

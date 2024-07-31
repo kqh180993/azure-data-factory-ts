@@ -1,0 +1,48 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-teamsoft-kqh"
+		},
+		"LS_ADLS_Parquet_accountKey": {
+			"value": ""
+		},
+		"LS_ASQL_AdventureWorks_password": {
+			"value": ""
+		},
+		"LS_ASQL_Integracion_password": {
+			"value": ""
+		},
+		"LS_ASQL_Tailspin_connectionString": {
+			"value": ""
+		},
+		"LS_S3_CSV_secretAccessKey": {
+			"value": ""
+		},
+		"LS_ADLS_Parquet_properties_typeProperties_url": {
+			"value": "https://adslteamsoftdf.dfs.core.windows.net/"
+		},
+		"LS_ASQL_AdventureWorks_properties_typeProperties_server": {
+			"value": "dbl-servicesrv.database.windows.net"
+		},
+		"LS_ASQL_AdventureWorks_properties_typeProperties_database": {
+			"value": "AdventureWorks"
+		},
+		"LS_ASQL_AdventureWorks_properties_typeProperties_userName": {
+			"value": "usr_asql_integracion"
+		},
+		"LS_ASQL_Integracion_properties_typeProperties_server": {
+			"value": "dbl-servicesrv.database.windows.net"
+		},
+		"LS_ASQL_Integracion_properties_typeProperties_database": {
+			"value": "Integracion"
+		},
+		"LS_ASQL_Integracion_properties_typeProperties_userName": {
+			"value": "usr_asql_integracion"
+		},
+		"LS_S3_CSV_properties_typeProperties_accessKeyId": {
+			"value": "AKIAWHQSER2DT3HU3OO6"
+		}
+	}
+}
